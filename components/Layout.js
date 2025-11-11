@@ -1,11 +1,7 @@
 class Layout {
     
-    constructor() {
+    constructor() {}
 
-    }
-
-    createElement() {
-        return <h1>Testing to see how tf I'm gonna do this</h1>
-    }
+    createElement() {}
 
 }

@@ -10,11 +10,8 @@ const port = 3000
 
 app.get('/', (req, res) => {
   getElements().then((elements) => {
-    
     res.send(elements.join('<br>'))
   })
-
- 
 })
 
 app.listen(port, () => {
