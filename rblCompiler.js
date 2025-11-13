@@ -16,7 +16,6 @@ function isChildElement(tabCount) {
 
 async function getFileElements(files) {
     var promises = [];
-    var newPromises = [];
     var directory_path = './test';
 
     for (const file of files) {
@@ -35,7 +34,6 @@ async function getFileElements(files) {
                 
             if (map.has(elementName)) {
                 var element = await map.get(elementName).createElement(); // store the Promise
-                console.log('element', element);
                 promises.push(element);
             }
         });
@@ -47,16 +45,12 @@ async function getFileElements(files) {
 
 async function getElements() {
     const directory_path = './test';
-    const promises = [];
-    const morePromises = [];
     const files = await fs.promises.readdir(directory_path);
-    var ret_elements  = [];
-    
+    var ret_elements = [];
 
     for(const file of files) {
         const file_path = path.join(directory_path, file);
         const file_content = await fs.promises.readFile(file_path, {encoding: 'utf-8'});
-        var previous_element = "";
         var element_build = "";
 
         var elements = file_content.split('\n');
@@ -64,35 +58,32 @@ async function getElements() {
         for(const element of elements) {
             const tab_count = element.split(':').length - 1;
             const element_name = element.replaceAll(':', '');
-            console.log(tab_count, element_name);
+         
             if (map.has(element_name)) {
                 var html_element = await map.get(element_name).createElement(); // store the Promise
                 previous_element = html_element;
              
                 if (tab_count == 0) {
-                    
                     if (element_build != "") {
                         ret_elements.push(element_build);
                     }
-
+                    
                     element_build = html_element;
-                    // console.log('html element', html_element);
-                    // console.log("this is the base", element_build)
+                
                 } else {
                     var split = element_build.split('<!--SPLIT-->');
                     var insert_index = (split.length / 2);
-                    // console.log('split', split.length, insert_index);
-                    element_build = split.splice(insert_index, 0, html_element).join('<!--SPLIT-->');
-                    // console.log("this is the element build", element_build, split);
-                    element_build = split;
+                    element_build = split
+                        .splice(insert_index, 0, html_element)
+                        .join('<!--SPLIT-->');
+                    element_build = split.join('<!--SPLIT-->');
                 }
             }
-
-            ret_elements.push(element_build);
         }
+
+        ret_elements.push(element_build);
     }
 
-    console.log('ret elements', ret_elements);
     return ret_elements;
 }
 

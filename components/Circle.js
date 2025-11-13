@@ -2,9 +2,9 @@ const path = require('node:path')
 const fs = require('node:fs/promises');
 const Entity = require('./Entity');
 
-class Box extends Entity {
+class Circle extends Entity {
 
-    static _className = 'Box';
+    static _className = 'Circle';
 
     constructor() {
         super();
@@ -12,7 +12,7 @@ class Box extends Entity {
 
     async createElement() {
         try {
-            const file_path = path.join(__dirname, '..', 'html', Box._className + '.html');
+            const file_path = path.join(__dirname, '..', 'html', Circle._className + '.html');
             const element = await fs.readFile(file_path, 'utf-8');
             return element;
         } catch (err) {
@@ -22,4 +22,4 @@ class Box extends Entity {
     }
 }
 
-module.exports = Box;
+module.exports = Circle;

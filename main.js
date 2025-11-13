@@ -5,8 +5,8 @@ const path = require('node:path')
 const readline = require('readline')
 const map = require('./componentMap')
 
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 
 app.get('/', (req, res) => {
   getElements().then((elements) => {
