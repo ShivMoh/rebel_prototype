@@ -1,5 +1,5 @@
 const express = require('express')
-const {getElements} = require('./rblCompiler')
+const {getElements, parseElements} = require('./rblCompiler')
 const fs = require('node:fs')
 const path = require('node:path')
 const readline = require('readline')
@@ -9,8 +9,8 @@ const app = express();
 const port = 3000;
 
 app.get('/', (req, res) => {
-  getElements().then((elements) => {
-    res.send(elements.join('<br>'))
+  parseElements().then((elements) => {
+    res.send(elements);
   })
 })
 

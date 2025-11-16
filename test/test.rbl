@@ -1,7 +1,5 @@
 Layout
 :Box
-Box
-:Circle
 ::Box
+:::Circle
 :Box
-:Circle
