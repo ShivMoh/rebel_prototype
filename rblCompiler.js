@@ -3,6 +3,7 @@ const path = require('node:path');
 const readline = require('readline');
 const map = require('./componentMap');
 const { parseArgs } = require('node:util');
+const {parseFormFields} = require('./formBuilder');
 
 // this doesn't account for child elements
 // it only places elements within each other 
@@ -100,6 +101,8 @@ function parseHtmlIntoTree(html_element, depth) {
         // we add the node as a child to the previous node at the immediate higher depth
         (last_inserted_depth[depth - 1]).addChild(node);
     }  
+
+    return node;
 }  
 
 // utilitiy function for printing the tree
@@ -120,16 +123,23 @@ async function parseElements() {
     for (const file of files) {
         const file_path = path.join(directory_path, file);
         const file_content = await fs.promises.readFile(file_path, {encoding: 'utf-8'});
-        var elements = file_content.split('\n');
-        console.log("elements", elements);
+        var elements = file_content.split(';');
+        console.log(elements)
 
         for (const element of elements) {
             const tab_count = element.split(':').length - 1; // this is the depth
             const element_name = element.replaceAll(':', '');
     
             if (map.has(element_name)) {
+                console.log('shouldnt this be running?');
                 var html_element = await map.get(element_name).createElement(); 
                 parseHtmlIntoTree(html_element, tab_count);
+            } else {
+                
+                // this is where we will build the form
+                console.log('element name', element_name);
+                // var form_string = parseFormFields(element_name);
+                // var ret_node = parseHtmlIntoTree(form_string, tab_count);
             }
            
         }
@@ -152,5 +162,9 @@ function constructElements(root) {
 
     html_string += root.ending_tags;
 }
+
+parseElements();
+
+console.log(html_string)
 
 module.exports = { getElements, parseElements };

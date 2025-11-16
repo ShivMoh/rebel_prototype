@@ -1,5 +1,8 @@
-Layout
-:Box
-::Box
-:::Circle
+Layout;
+:Form#
+--mode=create,
+--name=test-form,
+--fields=
+    text|firstname&
+    text|lastname;
 :Box
