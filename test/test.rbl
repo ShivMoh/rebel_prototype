@@ -4,5 +4,6 @@ Layout;
 --name=test-form,
 --fields=
     text|firstname&
-    text|lastname;
+    text|lastname&
+    text|othernames;
 :Box
