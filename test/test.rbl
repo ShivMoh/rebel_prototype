@@ -1,9 +1,12 @@
+%script=test.ssr;
 Layout;
 :Form#
 --mode=create,
 --name=test-form,
+--function=submitForm
 --fields=
     text|firstname&
     text|lastname&
     text|othernames;
 :Box
+

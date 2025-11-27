@@ -1,6 +1,7 @@
 function parseFormFields(formElement) {
   // console.log(formElement);
   const [identifier, args] = formElement.replaceAll('\n', '').split('#');
+  console.log("form element", formElement);
   const [mode, form_name, fields] = args.split(',');
   var form_string = `<form id=${form_name.replaceAll('--name=', '')}>`;
   var fields_arr = fields.replaceAll('--fields=', '').split('&');
@@ -16,11 +17,15 @@ function parseFormFields(formElement) {
       var element = document.getElementById(${name});
       document.addEventListener('change', function(${name}) {console.log('The name is ${name}')})
     `
-
     if (index == fields_arr.length - 1) {
       form_string += '<!--SPLIT-->';
     };
   });
+
+  form_script_tag = `
+        
+
+  `
 
   script_tag += `</script>`;
 

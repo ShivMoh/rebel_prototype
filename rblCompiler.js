@@ -120,22 +120,33 @@ async function parseElements() {
   const files = await fs.promises.readdir(directory_path);
 
   for (const file of files) {
+    if (!file.includes('.rbl')) return; // for now lets just parse the .rbl files
+
     const file_path = path.join(directory_path, file);
     const file_content = await fs.promises.readFile(file_path, { encoding: 'utf-8' });
+    console.log("content", file_content);
     var elements = file_content.split(';');
 
-    for (const element of elements) {
-      const tab_count = element.split(':').length - 1; // this is the depth
-      const element_name = element.replaceAll(':', '').replaceAll('\n', '');
 
-      if (map.has(element_name)) {
-        // console.log('shouldnt this be running?');
-        var html_element = await map.get(element_name).createElement();
-        parseHtmlIntoTree(html_element, tab_count);
+
+    for (const element of elements) {
+      if (element.charAt(0) == '%') {
+        const file_content = await fs.promises.readFile()
+
       } else {
-        // this is where we will build the form
-        var form_string = parseFormFields(element_name);
-        var ret_node = parseHtmlIntoTree(form_string, tab_count);
+
+        const tab_count = element.split(':').length - 1; // this is the depth
+        const element_name = element.replaceAll(':', '').replaceAll('\n', '');
+
+        if (map.has(element_name)) {
+          // console.log('shouldnt this be running?');
+          var html_element = await map.get(element_name).createElement();
+          parseHtmlIntoTree(html_element, tab_count);
+        } else {
+          // this is where we will build the form
+          var form_string = parseFormFields(element_name);
+          var ret_node = parseHtmlIntoTree(form_string, tab_count);
+        }
       }
 
     }

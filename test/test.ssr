@@ -1,0 +1,4 @@
+function onSubmit(event) {
+  event.preventDefault();
+  console.log("I am submitting something cool and random and I would like to do it coolish");
+}
