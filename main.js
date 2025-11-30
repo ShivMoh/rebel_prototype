@@ -1,5 +1,5 @@
 const express = require('express')
-const {getElements, parseElements} = require('./rblCompiler')
+const { parseElements, reset } = require('./rblCompiler')
 const fs = require('node:fs')
 const path = require('node:path')
 const readline = require('readline')
@@ -10,7 +10,9 @@ const port = 3000;
 
 app.get('/', (req, res) => {
   parseElements().then((elements) => {
+    console.log("this is happening");
     res.send(elements);
+    reset();
   })
 })
 

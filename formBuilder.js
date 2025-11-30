@@ -1,38 +1,49 @@
 function parseFormFields(formElement) {
   // console.log(formElement);
   const [identifier, args] = formElement.replaceAll('\n', '').split('#');
-  console.log("form element", formElement);
-  const [mode, form_name, fields] = args.split(',');
-  var form_string = `<form id=${form_name.replaceAll('--name=', '')}>`;
+  const [mode, form_name, func_name, fields] = args.split(',');
+  var stripped_form_name = form_name.replaceAll('--name=', '');
+  var stripped_function_name = func_name.replaceAll('--function=', '');
+  var form_string = `<form id=${stripped_form_name}>`;
   var fields_arr = fields.replaceAll('--fields=', '').split('&');
-  var script_tag = `<script>`;
-
 
   fields_arr.map((field, index) => {
     const [type, name] = field.replaceAll('    ', '').split('|')
 
     form_string += constructFormField(type, name);
 
-    script_tag += `
-      var element = document.getElementById(${name});
-      document.addEventListener('change', function(${name}) {console.log('The name is ${name}')})
-    `
     if (index == fields_arr.length - 1) {
       form_string += '<!--SPLIT-->';
     };
   });
 
-  form_script_tag = `
-        
+  var form_script_tag = `
+    <script>
+    var form = document.getElementById('${stripped_form_name}');
+    
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
 
-  `
+      const formObject = Object.fromEntries(formData.entries());
+      console.log("form object", formObject);
+    });
 
-  script_tag += `</script>`;
+    </script>
+  `;
 
+  form_string += form_script_tag;
+  form_string += `<button type='submit'> submit here </button>`;
   form_string += '</form>';
-  form_string += script_tag
 
   return form_string;
+
+}
+
+function connectFunction(function_name) {
+  console.log("function name", function_name);
+
+  const file = 
 
 }
 
