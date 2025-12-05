@@ -1,4 +1,8 @@
-function parseFormFields(formElement) {
+const fs = require('node:fs');
+const path = require('node:path');
+
+async function parseFormFields(formElement) {
+
   // console.log(formElement);
   const [identifier, args] = formElement.replaceAll('\n', '').split('#');
   const [mode, form_name, func_name, fields] = args.split(',');
@@ -32,6 +36,21 @@ function parseFormFields(formElement) {
     </script>
   `;
 
+
+  const files = await fs.promises.readdir(directory_path);
+  const dir = './test';
+
+  for (const file of files) {
+
+    var srr_file_path = path.join(dir, file);
+
+    console.log("file_path", srr_file_path);
+
+    const ssr_file = await fs.promises.readFile(srr_file_path, { encoding: 'utf-8' });
+
+    console.log("file path", ssr_file);
+  }
+
   form_string += form_script_tag;
   form_string += `<button type='submit'> submit here </button>`;
   form_string += '</form>';
@@ -43,7 +62,7 @@ function parseFormFields(formElement) {
 function connectFunction(function_name) {
   console.log("function name", function_name);
 
-  const file = 
+  const file = 'test';
 
 }
 
