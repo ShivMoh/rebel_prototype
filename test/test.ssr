@@ -1,4 +1,7 @@
 function onSubmit(event) {
   event.preventDefault();
-  console.log("I am submitting something cool and random and I would like to do it coolish");
+  var formData = new FormData(event.target);
+  var formObject = Object.fromEntries(formData.entries());
+
+  console.log('form data', formObject);
 }

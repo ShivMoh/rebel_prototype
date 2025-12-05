@@ -1,7 +1,25 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-async function parseFormFields(formElement) {
+async function getFormFields(fields) {
+  var form_string = '';
+  var index = 0;
+
+  for (var field of fields) {
+    const [type, name] = field.replaceAll('    ', '').split('|')
+
+    form_string += await constructFormField(type, name);
+
+    if (index == fields.length - 1) {
+      form_string += '<!--SPLIT-->';
+    };
+    index++;
+  }
+
+  return form_string;
+}
+
+async function parseFormFields(formElement, script_name) {
 
   // console.log(formElement);
   const [identifier, args] = formElement.replaceAll('\n', '').split('#');
@@ -10,46 +28,19 @@ async function parseFormFields(formElement) {
   var stripped_function_name = func_name.replaceAll('--function=', '');
   var form_string = `<form id=${stripped_form_name}>`;
   var fields_arr = fields.replaceAll('--fields=', '').split('&');
-
-  fields_arr.map((field, index) => {
-    const [type, name] = field.replaceAll('    ', '').split('|')
-
-    form_string += constructFormField(type, name);
-
-    if (index == fields_arr.length - 1) {
-      form_string += '<!--SPLIT-->';
-    };
-  });
+  form_string += await getFormFields(fields_arr);
+  var function_string = await connectFunction(script_name, func_name);
 
   var form_script_tag = `
     <script>
     var form = document.getElementById('${stripped_form_name}');
     
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const formData = new FormData(event.target);
+    form.addEventListener('submit', ${stripped_function_name});
 
-      const formObject = Object.fromEntries(formData.entries());
-      console.log("form object", formObject);
-    });
+    ${function_string}
 
     </script>
   `;
-
-
-  const files = await fs.promises.readdir(directory_path);
-  const dir = './test';
-
-  for (const file of files) {
-
-    var srr_file_path = path.join(dir, file);
-
-    console.log("file_path", srr_file_path);
-
-    const ssr_file = await fs.promises.readFile(srr_file_path, { encoding: 'utf-8' });
-
-    console.log("file path", ssr_file);
-  }
 
   form_string += form_script_tag;
   form_string += `<button type='submit'> submit here </button>`;
@@ -59,14 +50,14 @@ async function parseFormFields(formElement) {
 
 }
 
-function connectFunction(function_name) {
-  console.log("function name", function_name);
+async function connectFunction(script_name, function_name) {
+  var file_path = path.join('./test', script_name);
+  const ssr_file = await fs.promises.readFile(file_path, { encoding: 'utf-8' });
 
-  const file = 'test';
-
+  return ssr_file;
 }
 
-function constructFormField(type, name) {
+async function constructFormField(type, name) {
   if (type != 'text-area') {
     return `<input 
               type=${type} 

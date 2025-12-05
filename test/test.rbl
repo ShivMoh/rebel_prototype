@@ -3,7 +3,7 @@ Layout;
 :Form#
 --mode=create,
 --name=test-form,
---function=submitForm,
+--function=onSubmit,
 --fields=
     text|firstname&
     text|lastname&

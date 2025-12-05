@@ -22,6 +22,7 @@ class Node {
 }
 
 function parseHtmlIntoTree(html_element, depth) {
+  console.log('html element', html_element);
   var split = html_element.split('<!--SPLIT-->');
   var node = new Node(Math.random() * 10, split[0], split[1]);
 
@@ -62,12 +63,14 @@ async function parseElements() {
     const file_path = path.join(directory_path, file);
     const file_content = await fs.promises.readFile(file_path, { encoding: 'utf-8' });
     var elements = file_content.split(';');
+    var script_name = '';
 
 
     for (const element of elements) {
       // this is for reading the script file
       if (element.charAt(0) == '%') {
-
+        script_name = element.replaceAll('%script=', '');
+        console.log('The script name is', script_name);
       } else {
 
         const tab_count = element.split(':').length - 1; // this is the depth
@@ -78,7 +81,7 @@ async function parseElements() {
           parseHtmlIntoTree(html_element, tab_count);
         } else {
           // this is where we will build the form
-          var form_string = parseFormFields(element_name);
+          var form_string = await parseFormFields(element_name, script_name);
           parseHtmlIntoTree(form_string, tab_count);
         }
       }
