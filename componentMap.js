@@ -6,7 +6,6 @@ const Circle = require("./components/Circle");
 const map = new Map();
 
 map.set("Box", new Box());
-map.set("Table", new Table());
 map.set("Layout", new Layout());
 map.set("Circle", new Circle());
 

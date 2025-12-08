@@ -8,5 +8,5 @@ Layout;
     text|firstname&
     text|lastname&
     text|othernames;
-:Box
+:Box;
 

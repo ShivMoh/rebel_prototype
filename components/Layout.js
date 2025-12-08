@@ -3,23 +3,25 @@ const fs = require('node:fs/promises');
 const Entity = require('./Entity');
 
 class Layout extends Entity {
-    
-    static _className = 'Layout';
 
-    constructor() {
-        super();
-    }
+  static _className = 'Layout';
 
-    async createElement() {
-        try {
-            const file_path = path.join(__dirname, '..', 'html', Layout._className + '.html');
-            const element = await fs.readFile(file_path, 'utf-8');
-            return element;
-        } catch (err) {
-            console.error('Error reading file:', err);
-            throw err; // rethrow so you know what failed
-        }
-    }
+  constructor() {
+    super();
+  }
+
+  async createElement(args = []) {
+    return `
+      <div class='layout'>
+      </div> 
+    `;
+  }
+
+  async getCssFiles() {
+    // const file_path = path.join(__dirname, '..', 'css', Layout._className + '.css');
+    // const css_file = await fs.readFile(file_path, 'utf-8');
+    return [`Layout`];
+  }
 
 }
 

@@ -4,22 +4,22 @@ const Entity = require('./Entity');
 
 class Box extends Entity {
 
-    static _className = 'Box';
+  static _className = 'Box';
 
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    async createElement() {
-        try {
-            const file_path = path.join(__dirname, '..', 'html', Box._className + '.html');
-            const element = await fs.readFile(file_path, 'utf-8');
-            return element;
-        } catch (err) {
-            console.error('Error reading file:', err);
-            throw err; // rethrow so you know what failed
-        }
-    }
+  async createElement() {
+    return `
+        <div class='box'></div>
+    `;
+  }
+
+  async getCssFiles() {
+    return [`Box`];
+  }
+
 }
 
 module.exports = Box;

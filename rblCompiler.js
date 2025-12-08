@@ -6,7 +6,9 @@ const { parseArgs } = require('node:util');
 const { parseFormFields } = require('./formBuilder');
 
 var last_inserted_depth = []
+var css_files = ['Layout.css']; // a global array of css files to parse as Link refs
 html_string = '' // this is the final string output 
+
 
 class Node {
   children = [];
@@ -21,8 +23,20 @@ class Node {
   }
 }
 
+async function constructHead() {
+  var head_string = '<head>';
+  for (var css_file_ref of css_files) {
+    var css_path = `./css/${css_file_ref}`;
+    head_string += `<link rel="stylesheet" href="${css_path}">`
+  }
+
+  head_string += '</head>';
+  html_string += head_string;
+
+  return head_string;
+}
+
 function parseHtmlIntoTree(html_element, depth) {
-  console.log('html element', html_element);
   var split = html_element.split('<!--SPLIT-->');
   var node = new Node(Math.random() * 10, split[0], split[1]);
 
@@ -70,14 +84,21 @@ async function parseElements() {
       // this is for reading the script file
       if (element.charAt(0) == '%') {
         script_name = element.replaceAll('%script=', '');
-        console.log('The script name is', script_name);
+        // console.log('The script name is', script_name);
       } else {
 
         const tab_count = element.split(':').length - 1; // this is the depth
         const element_name = element.replaceAll(':', '').replaceAll('\n', '');
 
         if (map.has(element_name)) {
-          var html_element = await map.get(element_name).createElement();
+          var element_class = map.get(element_name);
+          var html_element = await element_class.createElement();
+          try {
+            var css_refs = await element.getCssFiles();
+            css_refs.map(css_ref => css_files.push(css_ref));
+          } catch (error) {
+            console.log('Style links for this element does not exist');
+          }
           parseHtmlIntoTree(html_element, tab_count);
         } else {
           // this is where we will build the form
@@ -91,7 +112,10 @@ async function parseElements() {
   }
 
   // construct the html string;
+  constructHead();
   constructElements(last_inserted_depth[0]);
+
+  console.log('html string to be returned', html_string);
   // printTree(last_inserted_depth[0]);
 
   return html_string; // return the global string variable
@@ -113,5 +137,6 @@ function constructElements(root) {
 function reset() {
   html_string += '';
 }
+
 
 module.exports = { parseElements, reset };

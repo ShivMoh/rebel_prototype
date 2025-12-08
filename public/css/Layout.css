@@ -1,0 +1,28 @@
+.layout {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 100vh;
+    background-color: grey;
+    flex-direction: column; // default behavour of the layout
+    align-items: center;
+    justify-items: center;
+}
+
+.layout .row {
+  flex-direction: row; // the default
+}
+
+.layout .column {
+  flex-direction: column;
+}
+
+.layout .right {
+
+}
+
+.layout .left {
+}
+
+
+
