@@ -12,7 +12,9 @@ class Box extends Entity {
 
   async createElement() {
     return `
-        <div class='box'></div>
+        <div class='box'>
+        <!--SPLIT-->
+        </div>
     `;
   }
 

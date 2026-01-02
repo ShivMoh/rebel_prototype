@@ -1,11 +1,15 @@
 class Entity {
-    static _className = 'Entity';
+  static _className = 'Entity';
 
-    constructor() {}
+  constructor() { }
 
-    createElement() {
-        return "testing";
-    }
-} 
+  createElement() {
+    return "testing";
+  }
+
+  getType() {
+    return "stateless";
+  }
+}
 
 module.exports = Entity;

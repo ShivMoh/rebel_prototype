@@ -1,5 +1,6 @@
-%script=test.ssr;
+%script=test.js;
 Layout;
+:TestState;
 :Form#
 --mode=create,
 --name=test-form,
@@ -8,5 +9,5 @@ Layout;
     text|firstname&
     text|lastname&
     text|othernames;
-:Box;
+:Box
 

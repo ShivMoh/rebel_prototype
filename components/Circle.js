@@ -13,6 +13,7 @@ class Circle extends Entity {
   async createElement() {
     return `
         <div class='circle'>
+        <!--SPLIT-->
         </div>
       `;
   }

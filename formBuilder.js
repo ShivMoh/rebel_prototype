@@ -20,7 +20,6 @@ async function getFormFields(fields) {
 }
 
 async function parseFormFields(formElement, script_name) {
-
   // console.log(formElement);
   const [identifier, args] = formElement.replaceAll('\n', '').split('#');
   const [mode, form_name, func_name, fields] = args.split(',');
@@ -34,11 +33,8 @@ async function parseFormFields(formElement, script_name) {
   var form_script_tag = `
     <script>
     var form = document.getElementById('${stripped_form_name}');
-    
     form.addEventListener('submit', ${stripped_function_name});
-
     ${function_string}
-
     </script>
   `;
 

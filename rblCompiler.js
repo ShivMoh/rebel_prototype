@@ -23,6 +23,19 @@ class Node {
   }
 }
 
+// used to construct the html tree into a html string
+function constructElements(root) {
+  html_string += root.opening_tags;
+
+  if (root.children.length < 0) return;
+
+  root.children.map(child => {
+    constructElements(child);
+  });
+
+  html_string += root.ending_tags;
+}
+
 async function constructHead() {
   var head_string = '<head>';
   for (var css_file_ref of css_files) {
@@ -37,8 +50,8 @@ async function constructHead() {
 }
 
 function parseHtmlIntoTree(html_element, depth) {
-  var split = html_element.split('<!--SPLIT-->');
-  var node = new Node(Math.random() * 10, split[0], split[1]);
+  var [head, tail] = html_element.split('<!--SPLIT-->');
+  var node = new Node(Math.random() * 10, head, tail);
 
   // this means its the first for this depth
   if (last_inserted_depth.length - 1 < depth) {
@@ -92,14 +105,33 @@ async function parseElements() {
 
         if (map.has(element_name)) {
           var element_class = map.get(element_name);
-          var html_element = await element_class.createElement();
-          try {
-            var css_refs = await element.getCssFiles();
-            css_refs.map(css_ref => css_files.push(css_ref));
-          } catch (error) {
-            console.log('Style links for this element does not exist');
+          var element_type = element_class.getType();
+          console.log("element type", element_type);
+
+
+          // parse stateless entities
+          if (element_type == 'stateless') {
+            var html_element = await element_class.createElement();
+            try {
+              var css_refs = await element.getCssFiles();
+              css_refs.map(css_ref => css_files.push(css_ref));
+            } catch (error) {
+              console.log('Style links for this element does not exist');
+            }
+            parseHtmlIntoTree(html_element, tab_count);
+          } else if (element_type == 'stateful') {
+            console.log("we are parsing a stateful component. wooohooo");
+            var html_element = await element_class.createElement();
+            try {
+              var css_refs = await element.getCssFiles();
+              css_refs.map(css_ref => css_files.push(css_ref));
+            } catch (error) {
+              console.log('Style links for this element does not exist');
+            }
+            parseHtmlIntoTree(html_element, tab_count);
+
           }
-          parseHtmlIntoTree(html_element, tab_count);
+
         } else {
           // this is where we will build the form
           var form_string = await parseFormFields(element_name, script_name);
@@ -111,31 +143,16 @@ async function parseElements() {
 
   }
 
-  // construct the html string;
+  // construct the html string; sequential execution
   constructHead();
   constructElements(last_inserted_depth[0]);
-
-  console.log('html string to be returned', html_string);
-  // printTree(last_inserted_depth[0]);
 
   return html_string; // return the global string variable
 }
 
-// used to construct the html tree into a html string
-function constructElements(root) {
-  html_string += root.opening_tags;
-
-  if (root.children.length < 0) return;
-
-  root.children.map(child => {
-    constructElements(child);
-  });
-
-  html_string += root.ending_tags;
-}
 
 function reset() {
-  html_string += '';
+  html_string = '';
 }
 
 
